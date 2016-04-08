@@ -10,6 +10,8 @@ from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr
 import poplib
+import threading
+import time
 
 dir_ = os.getcwd()
 
@@ -154,8 +156,8 @@ def guess_charset(msg):
             charset = content_type[pos + 8:].strip()
     return charset
 
-
-if __name__ == "__main__":
+# 检测是否有apple邮件
+def check_mail(threadNum, threadNo):
 
 	file1 = 'mail.txt' # 需要检测的文件
 	file2 = 'check_mail.txt' # 结果文件
@@ -163,12 +165,16 @@ if __name__ == "__main__":
 	file = open("%s/%s" % (dir_, file1))
 	sk = 0
 	while 1:
-		sk += 1 
-		print("执行：%s" % sk)
 		line = file.readline()
 		if not line:
 			break
 
+		sk += 1
+		if (sk-1)%threadNum != threadNo:
+			continue
+		
+
+		print("执行：%s" % sk)
 		# print("=%s=%s=" %(line.split('&')[0].strip(), line.split('&')[1].strip()))
 		check = 0
 		msg = get_mail(line.split('&')[0].strip(), line.split('&')[1].strip(), 50)
@@ -179,6 +185,28 @@ if __name__ == "__main__":
 			f = open('%s/%s' % (dir_, file2),'a')
 			f.write(line)
 			f.close()
+
+
+if __name__ == "__main__":
+
+	# 总线程数 
+    threadNum = 12
+
+    threads = []
+    for i in range(0, threadNum):
+        t = threading.Thread( target=check_mail, name='check_mail', args=(threadNum, i) )
+        threads.append(t)
+    
+    for t in threads:
+        t.setDaemon(True)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    print('all ok:%s' % time.strftime("%Y-%m-%d %H:%M:%S"))
+
+	
 	    
 			
 
