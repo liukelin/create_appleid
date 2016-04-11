@@ -12,6 +12,9 @@ from email.utils import parseaddr
 import poplib
 import threading
 import time
+import sys
+import imp
+imp.reload(sys)
 
 dir_ = os.getcwd()
 
@@ -28,12 +31,13 @@ def get_mail(email, password, limit=1):
 		pop3_server = pops[st]
 
 	msgAll = []
-	try:
-		# 输入邮件地址, 口令和POP3服务器地址:
-		email = email # input('Email: ')
-		password = password # input('Password: ')
-		pop3_server = pop3_server # input('POP3 server: ') # pop.126.com   pop.163.com
 
+	# 输入邮件地址, 口令和POP3服务器地址:
+	email = email # input('Email: ')
+	password = password # input('Password: ')
+	pop3_server = pop3_server # input('POP3 server: ') # pop.126.com   pop.163.com
+
+	try:
 		# 连接到POP3服务器:
 		server = poplib.POP3(pop3_server)
 		
@@ -46,39 +50,44 @@ def get_mail(email, password, limit=1):
 		# 身份认证:
 		server.user(email)
 		server.pass_(password)
+	except:
+		return msgAll
 
-		# stat()返回邮件数量和占用空间:
-		print('Messages: %s. Size: %s' % server.stat())
-		
-		# list()返回所有邮件的编号:
-		resp, mails, octets = server.list()
-		
-		# 可以查看返回的列表类似[b'1 82923', b'2 2184', ...]
-		# print(mails)
+	# stat()返回邮件数量和占用空间:
+	print('Messages: %s. Size: %s' % server.stat())
+	
+	# list()返回所有邮件的编号:
+	resp, mails, octets = server.list()
+	
+	# 可以查看返回的列表类似[b'1 82923', b'2 2184', ...]
+	# print(mails)
 
-		# 获取最新一封邮件, 注意索引号从1开始:
-		index = len(mails) # 总数
+	# 获取最新一封邮件, 注意索引号从1开始:
+	index = len(mails) # 总数
 
-		page = (index - limit) if (index - limit)>0 else 0
-		for x in range(index, page ,-1): #循环获取所有邮件
+	page = (index - limit) if (index - limit)>0 else 0
+	for x in range(index, page ,-1): #循环获取所有邮件
 
+		try:
 			resp, lines, octets = server.retr(x)
 
 			# lines存储了邮件的原始文本的每一行,
 			# 可以获得整个邮件的原始文本:
 			msg_content = b'\r\n'.join(lines).decode('utf-8')
-			
+
 			# 稍后解析出邮件:
 			msg = Parser().parsestr(msg_content)
 
 			msgAll.append(print_info(msg))
+		except:
+			pass
 
-		# 可以根据邮件索引号直接从服务器删除邮件:
-		# server.dele(index)
-		# 关闭连接:
-		server.quit()
-	except:
-		pass
+	# 可以根据邮件索引号直接从服务器删除邮件:
+	# server.dele(index)
+	# 关闭连接:
+	server.quit()
+	# except:
+	# 	pass
 
 	return msgAll
 
@@ -131,6 +140,7 @@ def print_info(msg, indent=0):
 		else:
 			# 附件
 			print('%sAttachment: %s' % ('  ' * indent, content_type))
+			data['test'] = ''
 
 	return data
 
@@ -157,40 +167,54 @@ def guess_charset(msg):
     return charset
 
 # 检测是否有apple邮件
+check = {}
 def check_mail(threadNum, threadNo):
 
 	file1 = 'mail.txt' # 需要检测的文件
 	file2 = 'check_mail.txt' # 结果文件
 
 	file = open("%s/%s" % (dir_, file1))
-	sk = 0
+	l = 0
+
+	# lines = file.readlines()
+	# print("总行数:%s" % len(lines))
+	# for l in range(0, len(lines)+1):
 	while 1:
 		line = file.readline()
 		if not line:
 			break
+		l+=1
+		print("=%s=%s=%s=" %(l, (l)%threadNum, threadNo))
+		if (l-1)%threadNum == threadNo:
+			print("执行：%s" % l)
+			
+			# print("=%s=%s=" %(line.split('&')[0].strip(), line.split('&')[1].strip()))
 
-		sk += 1
-		if (sk-1)%threadNum != threadNo:
-			continue
-		
+			check[threadNo] = 0
+			msg = get_mail(line.split('&')[0].strip(), line.split('&')[1].strip(), 100)
+			for i in msg:
+				if ('From' in i): 
+					print(i['From']['addr'])
+					if i['From']['addr'] == 'appleid@id.apple.com':
+						check[threadNo] = 1
+						print("存在")
+						break
+				else:
+					check[threadNo] = 1
 
-		print("执行：%s" % sk)
-		# print("=%s=%s=" %(line.split('&')[0].strip(), line.split('&')[1].strip()))
-		check = 0
-		msg = get_mail(line.split('&')[0].strip(), line.split('&')[1].strip(), 50)
-		for i in msg:
-			if ('From' in i) and i['From']['addr'] == 'appleid@id.apple.com':
-				check = 1
-		if check==0:
-			f = open('%s/%s' % (dir_, file2),'a')
-			f.write(line)
-			f.close()
+			if check[threadNo]==0:
+				print("写入")
+				f = open('%s/%s' % (dir_, file2),'a')
+				f.write(line)
+				f.close()
+			
+			
 
 
 if __name__ == "__main__":
 
 	# 总线程数 
-    threadNum = 12
+    threadNum = 9
 
     threads = []
     for i in range(0, threadNum):
