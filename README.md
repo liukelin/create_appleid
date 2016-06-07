@@ -5,3 +5,9 @@ create_appleid
 2.判断验证码。（使用第三方判断）		未完成
 
 3.获取apple邮件验证码。	完成
+
+
+
+python3.4
+PySide
+Ghost.py (0.2.3)
