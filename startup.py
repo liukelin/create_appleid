@@ -2,19 +2,20 @@
 # -*- coding: utf-8 -*-
 # 
 import urllib3
-import urllib
-from urllib.request import Request, urlopen
+# import urllib
+# from urllib.request import Request, urlopen
 import string
 import re
 import os
 import time
 import threading
 # import StringIO
-import pycurl
-import http.cookiejar
+# import pycurl
+# import http.cookiejar
 from ghost import Ghost
+import ghost
 
-urllib3.disable_warnings() # 解决访问https报错
+# urllib3.disable_warnings() # 解决访问https报错
 dir_ = os.getcwd()
 
 
@@ -57,12 +58,18 @@ def get_home():
 	# htmlCode = html.read()
 	# print(htmlCode)
 
+	'''
 	ghost = Ghost()
 	page, extra_resources = ghost.open(url)
-	if page.http_status==200 and 'accountName' in ghost.content :
-		
+	if page.http_status==200 and 'accountName' in ghost1.content :
 		set_logs(htmlCode,'html.html')
 	print(age.http_status)
+	'''
+	ghost = Ghost()
+	with ghost.start() as session:
+		page, extra_resources = session.open(url)
+		if page.http_status == 200 and 'accountName' in page.content:
+	    		print(page.content)
 
 
 
