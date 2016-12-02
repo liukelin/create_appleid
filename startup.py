@@ -193,7 +193,7 @@ def open_apple(body={}):
 	# 继续
 	browser.find_element_by_class_name("continue").click()
 
-	time.sleep(2)
+	time.sleep(5)
 
 	# aalhandles = browser.window_handles # 获取所有窗口句柄
 	# for handle in aalhandles: # 在所有窗口中查找弹出窗口
@@ -212,12 +212,13 @@ def open_apple(body={}):
 	'''
 	此处调用get_mail.py 代码 登录邮箱获取内容验证码
 	'''
+	time.sleep(10)
 	print('===获取邮件验证码中...')
 	mailCode = get_mail.get_apple_code(body['email'], body['emailPassword'], 2)
 	if len(mailCode)==0: 
 		print('===重试获取邮件验证码...')
 		# 重试
-		time.sleep(10) 
+		time.sleep(10)
 		mailCode = get_mail.get_apple_code(body['email'], body['emailPassword'], 2)
 	if len(mailCode)==0:
 		print('===获取邮件验证码失败！')
@@ -235,7 +236,9 @@ def open_apple(body={}):
 	browser.find_element_by_id("char3").send_keys(char[3])
 	browser.find_element_by_id("char4").send_keys(char[4])
 	browser.find_element_by_id("char5").send_keys(char[5])
-	browser.find_element_by_class_name("continue").click()
+	# browser.find_element_by_class_name("continue").click()
+	browser.find_element_by_xpath("//div[@class=\"idms-modal-dialog\"]/div[1]/verify-email[1]/div[2]/div[2]/button[2]").click()
+	# browser.find_element_by_partial_link_text("验证").click()
 
 	time.sleep(10)
 	browser.implicitly_wait(10)
@@ -249,8 +252,13 @@ def open_apple(body={}):
 if __name__ == "__main__":
 	# get_captcha()
 	# get_home()
+	# fy3096257641@sina.com&Ffyqv712
+	# t71388500@sina.com&bpdox917
+	# jg1244533@sina.com&rmus320
 	body = {
 			'email':'liukelin_5@163.com',
+			'emailPassword': '80734', 	# 邮箱登录密码
+
 			'password':'Liu1234567',		# 注册密码
 			'last_name':'liu',
 			'first_name':'kelin',
@@ -258,7 +266,6 @@ if __name__ == "__main__":
 			'answer1':'问题答案1',
 			'answer2':'问题答案2',
 			'answer3':'问题答案3',
-			'emailPassword': 'qq6280734', 	# 邮箱登录密码
 		}
 	open_apple(body)
 
