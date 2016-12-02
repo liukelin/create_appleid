@@ -253,9 +253,9 @@ if __name__ == "__main__":
 
     print('all ok:%s' % time.strftime("%Y-%m-%d %H:%M:%S"))
 	'''
-	# code = get_apple_code('liukelin_1@163.com','000', 1)
+	# code = get_apple_code('liukelin_5@163.com','qq6280734', 3)
 	# print(code)
-	pass	    
+	pass 
 			
 
 
