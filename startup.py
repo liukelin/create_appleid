@@ -256,8 +256,8 @@ if __name__ == "__main__":
 	# t71388500@sina.com&bpdox917
 	# jg1244533@sina.com&rmus320
 	body = {
-			'email':'liukelin_5@163.com',
-			'emailPassword': '80734', 	# 邮箱登录密码
+			'email':'liukelin_4@163.com',
+			'emailPassword': '0734', 	# 邮箱登录密码
 
 			'password':'Liu1234567',		# 注册密码
 			'last_name':'liu',
