@@ -3,7 +3,6 @@
 # get Mail
 # 打开邮箱并判断邮件获取邮件内容
 # @author: liukelin  314566990@qq.com
-# http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014320098721191b70a2cf7b5441deb01595edd8147196000
 # 
 import os
 from email.parser import Parser
