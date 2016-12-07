@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# 
+# @author: liukelin  314566990@qq.com
 # import urllib3
 import sys
 # import urllib
@@ -122,9 +122,19 @@ def is_not_visible(driver, locator, timeout=10):
         return False
 
 '''
-
+	body={
+		'email':'liukelin_4@163.com',
+		'emailPassword': '0734', 	# 邮箱登录密码
+		'password':'Liu1234567',		# 注册密码
+		'last_name':'liu',
+		'first_name':'kelin',
+		'birthday_field':'1990-11-22',
+		'answer1':'问题答案1',
+		'answer2':'问题答案2',
+		'answer3':'问题答案3',
+	}
 '''
-def open_apple(body={}):
+def create_apple(body={}):
 	# 使用内核打开浏览器
 	browser = webdriver.Chrome(executable_path = webdriverDir)
 
