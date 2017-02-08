@@ -269,7 +269,7 @@ if __name__ == "__main__":
 			'email':'liukelin_4@163.com',
 			'emailPassword': '0734', 	# 邮箱登录密码
 
-			'password':'Liu1234567',		# 注册密码
+			'password':'Li67',		# 注册密码
 			'last_name':'liu',
 			'first_name':'kelin',
 			'birthday_field':'1990-11-22',
