@@ -277,7 +277,7 @@ if __name__ == "__main__":
 			'answer2':'问题答案2',
 			'answer3':'问题答案3',
 		}
-	open_apple(body)
+	create_apple(body)
 
 
 
